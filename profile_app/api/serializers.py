@@ -28,3 +28,29 @@ class UserProfileSerializer(serializers.ModelSerializer):
             user.email = user_data.get('email', user.email)
             user.save()
         return super().update(instance, validated_data)
+    
+class BusinessListSerializer(serializers.ModelSerializer):
+    first_name = serializers.CharField(source='user.first_name')
+    last_name = serializers.CharField(source='user.last_name')
+    username = serializers.CharField(source='user.username', read_only=True)
+    class Meta:
+        model = UserProfile
+        fields = [
+            'user', 'username', 'first_name', 'last_name', 
+            'file', 'location', 'tel', 'description', 
+            'working_hours', 'type'
+        ]
+        read_only_fields = ['type']
+
+class CustomerListSerializer(serializers.ModelSerializer):
+    first_name = serializers.CharField(source='user.first_name')
+    last_name = serializers.CharField(source='user.last_name')
+    uploaded_at = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%S", source='created_at',read_only=True)
+    username = serializers.CharField(source='user.username', read_only=True)
+    class Meta:
+        model = UserProfile
+        fields = [
+            'user', 'username', 'first_name', 'last_name', 
+            'file', 'uploaded_at', 'type'
+        ]
+        read_only_fields = ['type']
