@@ -3,9 +3,14 @@ from offers_app.models import Offer, OfferDetail
 
 
 class OfferDetailSerializer(serializers.ModelSerializer):
+    price = serializers.DecimalField(
+        max_digits=10, 
+        decimal_places=2, 
+        coerce_to_string=False
+    )
     class Meta:
         model = OfferDetail
-        fields = ['title','revisions','delivery_time_in_days','price','features','offer_type']
+        fields = ['id','title','revisions','delivery_time_in_days','price','features','offer_type']
 
 class OfferSerializer(serializers.ModelSerializer):
 
@@ -13,7 +18,7 @@ class OfferSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Offer
-        fields = ['title','image','description','details']
+        fields = ['id','title','image','description','details']
 
     def validate_details(self, value):
         if len(value) !=3:
