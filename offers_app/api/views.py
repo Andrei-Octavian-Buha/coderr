@@ -3,7 +3,7 @@ from django.db.models import Min
 from rest_framework import viewsets, generics
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.filters import OrderingFilter, SearchFilter
-from .serializers import OfferSerializer, OfferDetailSerializer, OfferListSerializer
+from .serializers import OfferSerializer, OfferDetailSerializer, OfferListSerializer, OfferRetrieveSerializer
 from offers_app.models import Offer, OfferDetail
 from .permissions import IsBusinessUserOrReadOnly
 from .filters import OfferFilter
@@ -19,6 +19,9 @@ class OfferView(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == 'list':
             return OfferListSerializer
+        if self.action == 'retrieve':
+            return OfferRetrieveSerializer
+
         return OfferSerializer
     
 class OfferDetailView(generics.RetrieveAPIView):
