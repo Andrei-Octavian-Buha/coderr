@@ -1,11 +1,15 @@
 from django.db import models
+from django.conf import settings
 
 # Create your models here.
 
 class Offer(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='offers')
     title = models.CharField(max_length=255)
     image = models.FileField(upload_to='offers/', blank=True, null=True)
     description = models.TextField(max_length=2000)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 class OfferDetail(models.Model):
     class OfferType(models.TextChoices):
