@@ -11,6 +11,15 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 class OrderView(viewsets.ModelViewSet):
+   """
+    ViewSet for managing service orders.
+    
+    Provides CRUD operations for orders with strict access control:
+    - Only Admins can delete orders.
+    - Only Business owners can update order status.
+    - Customers can view and create orders.
+    The list view returns only orders related to the authenticated user.
+    """
    def get_permissions(self):
       if self.action == 'destroy':
          return [IsAdminUser()]
@@ -32,6 +41,12 @@ class OrderView(viewsets.ModelViewSet):
       ).order_by('-created_at')
 
 class OrderCountView(views.APIView):
+   """
+    API view to retrieve the count of active orders for a business user.
+    
+    Returns the total number of orders currently marked as 'in_progress' 
+    for a specific business profile.
+    """
    permission_classes = [IsAuthenticated]
    def get(self,request, pk):
       try:
@@ -49,6 +64,12 @@ class OrderCountView(views.APIView):
       return Response({"order_count": count}, status=status.HTTP_200_OK)
 
 class CompleatedOrderCountView(views.APIView):
+   """
+    API view to retrieve the count of finished orders for a business user.
+    
+    Returns the total number of orders marked as 'completed' 
+    for a specific business profile.
+    """
    permission_classes = [IsAuthenticated]
 
    def get(self,request, pk):

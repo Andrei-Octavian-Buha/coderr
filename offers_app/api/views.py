@@ -9,6 +9,14 @@ from .permissions import IsBusinessUserOrReadOnly
 from .filters import OfferFilter
 
 class OfferView(viewsets.ModelViewSet):
+    """
+    ViewSet for managing business offers.
+    
+    Provides standard lifecycle operations for offers. It calculates the 
+    minimum price dynamically for sorting and filtering purposes. 
+    Access is restricted: only business users can create or modify offers, 
+    while others have read-only access.
+    """
     queryset = Offer.objects.annotate(min_price=Min('details__price')).all()
     permission_classes = [IsAuthenticated, IsBusinessUserOrReadOnly]
     filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter]
@@ -25,6 +33,12 @@ class OfferView(viewsets.ModelViewSet):
         return OfferSerializer
     
 class OfferDetailView(generics.RetrieveAPIView):
+    """
+    API view to retrieve a specific offer detail package.
+    
+    Provides in-depth information about a single pricing tier or 
+    service package associated with an offer.
+    """
     queryset = OfferDetail.objects.all()
     permission_classes = [IsAuthenticated]
     serializer_class = OfferDetailSerializer

@@ -3,11 +3,23 @@ from offers_app.models import Offer, OfferDetail
 from django.contrib.auth import get_user_model
 
 class UserDetailsSerializer(serializers.ModelSerializer):
+    """
+    Serializer for basic user information.
+    
+    Used to provide nested owner details (first name, last name, username) 
+    within offer listings.
+    """
     class Meta:
         model = get_user_model()
         fields = ['first_name','last_name','username']
 
 class OfferDetailSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the specific pricing packages of an offer.
+    
+    Includes comprehensive fields for revisions, delivery time, price, 
+    and features for each individual package.
+    """
     price = serializers.DecimalField(
         max_digits=10, 
         decimal_places=2, 
@@ -18,6 +30,12 @@ class OfferDetailSerializer(serializers.ModelSerializer):
         fields = ['id','title','revisions','delivery_time_in_days','price','features','offer_type']
 
 class OfferDetailLinkSerializer(serializers.ModelSerializer):
+    """
+    Short-form serializer for offer details.
+    
+    Provides only the ID and a generated URL to access the 
+    full package details endpoint.
+    """
     url = serializers.SerializerMethodField()
     class Meta:
         model = OfferDetail
@@ -27,7 +45,12 @@ class OfferDetailLinkSerializer(serializers.ModelSerializer):
         return f"/offerdetails/{obj.id}/"
 
 class OfferSerializer(serializers.ModelSerializer):
-
+    """
+    Main serializer for creating and updating business offers.
+    
+    Handles nested creation and updates for exactly three offer details 
+    (basic, standard, professional packages) within a single transaction.
+    """
     details = OfferDetailSerializer(many=True)
     class Meta:
         model = Offer
@@ -65,6 +88,12 @@ class OfferSerializer(serializers.ModelSerializer):
                     detail_instance.save()
         return instance    
 class OfferListSerializer(serializers.ModelSerializer):
+    """
+    Serializer for offer catalog listings.
+    
+    Calculates aggregate data such as minimum price and minimum delivery time 
+    from nested details and includes formatted timestamps and owner info.
+    """
     details = OfferDetailLinkSerializer(many=True)
     user = serializers.PrimaryKeyRelatedField(read_only=True)
     user_details = UserDetailsSerializer(source='user', read_only=True)
@@ -88,6 +117,12 @@ class OfferListSerializer(serializers.ModelSerializer):
         return min(times) if times else 0
     
 class OfferRetrieveSerializer(OfferListSerializer):
+    """
+    Serializer for the detailed view of a single offer.
+    
+    Extends OfferListSerializer but focuses on the structure 
+    required for the single object detail response.
+    """
     class Meta(OfferListSerializer.Meta):
         fields = ['id','user','title','image','description','created_at','updated_at','details','min_price','min_delivery_time']
     

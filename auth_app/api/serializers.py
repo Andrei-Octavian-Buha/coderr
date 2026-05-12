@@ -6,6 +6,12 @@ from profile_app.models import UserProfile
 from django.db import transaction
 
 class RegisterSerializer(serializers.ModelSerializer):
+    """
+    Serializer for user registration.
+    
+    Validates password matching, email uniqueness, and handles the atomic 
+    creation of both the User and their associated UserProfile.
+    """
     password = serializers.CharField(write_only=True)
     repeated_password = serializers.CharField(write_only=True)
     type = serializers.ChoiceField(choices=UserProfile.TypeChoices.choices)
@@ -31,6 +37,12 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
     
 class LoginSerializer(serializers.Serializer):
+    """
+    Serializer for user authentication.
+    
+    Validates that the username and password are provided and checks 
+    them against the database using Django's authentication system.
+    """
     username = serializers.CharField()
     password = serializers.CharField()
 

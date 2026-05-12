@@ -3,6 +3,14 @@ from offers_app.models import OfferDetail
 from orders_app.models import Order
 
 class OrderSerializer(serializers.ModelSerializer):
+    """
+    Serializer for creating and viewing service orders.
+    
+    This serializer handles the transition from an OfferDetail to a formal Order.
+    When an order is created, it captures a snapshot of the offer's details 
+    (price, revisions, features, etc.) to ensure information remains 
+    consistent even if the original offer is modified later.
+    """
     offer_detail = serializers.PrimaryKeyRelatedField(
         queryset=OfferDetail.objects.all(), 
         write_only=True
@@ -28,6 +36,13 @@ class OrderSerializer(serializers.ModelSerializer):
         return Order.objects.create(offer_detail=offer_detail,**validated_data)
 
 class OrderUpdateSerializer(OrderSerializer):
+    """
+    Serializer optimized for updating existing orders.
+    
+    Restricts modifications to primarily the 'status' field, ensuring that 
+    core agreement details like price and features cannot be altered 
+    after the order is placed.
+    """
     class Meta(OrderSerializer.Meta):
         read_only_fields = ['id','customer_user','business_user','title','revisions','delivery_time_in_days','price','features','offer_type']
 

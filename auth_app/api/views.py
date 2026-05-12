@@ -7,6 +7,12 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from .serializers import RegisterSerializer, LoginSerializer
 
 class RegisterView(APIView):
+    """
+    Handles user registration.
+    
+    Accepts user credentials, creates a new user account, and returns 
+    an authentication token along with basic user information.
+    """
     permission_classes = [AllowAny]
 
     def post(self, request):
@@ -25,6 +31,12 @@ class RegisterView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class LoginView(ObtainAuthToken):
+    """
+    Handles user authentication.
+    
+    Verifies provided credentials and returns an authentication token 
+    if the login is successful, allowing access to protected endpoints.
+    """
     permission_classes = [AllowAny]
 
     def post(self, request):
