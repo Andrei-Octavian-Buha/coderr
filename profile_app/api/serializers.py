@@ -15,7 +15,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username', read_only=True)
 
 
-    created_at = serializers.DateTimeField(read_only=True)
+    created_at = serializers.DateTimeField(read_only=True, format="%Y-%m-%dT%H:%M:%SZ")
 
     class Meta:
         model = UserProfile
