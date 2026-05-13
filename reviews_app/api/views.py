@@ -27,6 +27,7 @@ class ReviewView(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_class = ReviewFilter
     ordering_fields = ['updated_at', 'rating']
+    pagination_class = None
 
     def get_serializer_class(self):
         if self.action in ['update', 'partial_update']:
