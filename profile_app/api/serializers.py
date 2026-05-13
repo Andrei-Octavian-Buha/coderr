@@ -55,6 +55,7 @@ class BusinessListSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ['type']
 
+
 class CustomerListSerializer(serializers.ModelSerializer):
     """
     Simplified serializer for customer listings.

@@ -27,7 +27,7 @@ class BusinessListView(generics.ListAPIView):
     """
     permission_classes = [IsAuthenticated]
     serializer_class = BusinessListSerializer
-    
+    pagination_class = None
     def get_queryset(self):
         return UserProfile.objects.filter(type='business')
     
@@ -39,6 +39,6 @@ class CustomerListView(generics.ListAPIView):
     """
     permission_classes = [IsAuthenticated]
     serializer_class = CustomerListSerializer
-
+    pagination_class = None
     def get_queryset(self):
         return UserProfile.objects.filter(type='customer')
