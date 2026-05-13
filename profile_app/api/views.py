@@ -15,7 +15,8 @@ class UserProfileDetailView(generics.RetrieveUpdateAPIView):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
-    lookup_field = 'pk'
+    lookup_field = 'user__id'
+    lookup_url_kwarg = 'pk'
 
 
 class BusinessListView(generics.ListAPIView):

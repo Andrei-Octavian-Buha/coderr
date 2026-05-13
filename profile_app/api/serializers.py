@@ -27,6 +27,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         read_only_fields = ['type']
 
     def update(self, instance, validated_data):
+        print(f"DEBUG VALIDATED DATA: {validated_data}") # Adaugă asta
         user_data = validated_data.pop('user', {})
         user = instance.user
         if user_data:
