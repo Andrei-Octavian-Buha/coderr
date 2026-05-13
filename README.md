@@ -29,7 +29,7 @@
 ## 📂 Project Structure
 
 ```bash
-coderr_backend/
+coderr/
 │── auth_app/          # Registration and Login logic
 │── profile_app/       # Business & Customer profile management
 │── offers_app/        # Multi-tier service offers & details
@@ -44,7 +44,7 @@ coderr_backend/
 1. Clone the repository
 ```bash
 git clone <your-repository-link>
-cd coderr_backend
+cd coderr
 ```
 2. Setup Virtual Environment
 ```bash
