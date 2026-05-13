@@ -10,7 +10,7 @@ class OfferFilter(filters.FilterSet):
     related fields from the OfferDetail model.
     """
     creator_id = filters.NumberFilter(field_name='user_id')
-    min_price =	filters.NumberFilter(field_name='details__price',lookup_expr='gte')
+    min_price = filters.NumberFilter(field_name='min_price', lookup_expr='gte')
     max_delivery_time = filters.NumberFilter(field_name='details__delivery_time_in_days',lookup_expr='lte')
     
     class Meta:

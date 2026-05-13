@@ -29,7 +29,10 @@ class OfferDetailSerializer(serializers.ModelSerializer):
         model = OfferDetail
         fields = ['id','title','revisions','delivery_time_in_days','price','features','offer_type']
 
-class OfferDetailLinkSerializer(serializers.ModelSerializer):
+
+
+
+class OfferDetailLinkCustomSerializer(serializers.ModelSerializer):
     """
     Short-form serializer for offer details.
     
@@ -43,6 +46,24 @@ class OfferDetailLinkSerializer(serializers.ModelSerializer):
 
     def get_url(self, obj):
         return f"/offerdetails/{obj.id}/"
+
+class OfferDetailLinkSerializer(serializers.ModelSerializer):
+    """
+    Short-form serializer for offer details.
+    
+    Provides only the ID and a generated URL to access the 
+    full package details endpoint.
+    """
+    url = serializers.HyperlinkedIdentityField(
+        view_name='offer-package-detail',
+        read_only=True,
+    )
+    class Meta:
+        model = OfferDetail
+        fields = ['id', 'url']
+
+
+
 
 class OfferSerializer(serializers.ModelSerializer):
     """
@@ -86,7 +107,8 @@ class OfferSerializer(serializers.ModelSerializer):
                     for attr, value in detail_item.items():
                         setattr(detail_instance, attr, value)
                     detail_instance.save()
-        return instance    
+        return instance   
+
 class OfferListSerializer(serializers.ModelSerializer):
     """
     Serializer for offer catalog listings.
@@ -94,12 +116,11 @@ class OfferListSerializer(serializers.ModelSerializer):
     Calculates aggregate data such as minimum price and minimum delivery time 
     from nested details and includes formatted timestamps and owner info.
     """
-    details = OfferDetailLinkSerializer(many=True)
+    details = OfferDetailLinkCustomSerializer(many=True)
     user = serializers.PrimaryKeyRelatedField(read_only=True)
     user_details = UserDetailsSerializer(source='user', read_only=True)
-
-    min_price = serializers.SerializerMethodField()
-    min_delivery_time = serializers.SerializerMethodField()
+    min_price = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    min_delivery_time = serializers.IntegerField(read_only=True)
 
     created_at = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%SZ")
     updated_at = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%SZ")
@@ -108,21 +129,22 @@ class OfferListSerializer(serializers.ModelSerializer):
         model = Offer
         fields = ['id','user','title','image','description','created_at','updated_at','details','min_price','min_delivery_time','user_details']
 
-    def get_min_price(self, obj):
-        prices = [detail.price for detail in obj.details.all()]
-        return min(prices) if prices else 0 
 
-    def get_min_delivery_time(self,obj):
-        times = [detail.delivery_time_in_days for detail in obj.details.all()]
-        return min(times) if times else 0
-    
-class OfferRetrieveSerializer(OfferListSerializer):
+class OfferRetrieveSerializer(serializers.ModelSerializer):
     """
-    Serializer for the detailed view of a single offer.
+    Serializer for offer catalog listings.
     
-    Extends OfferListSerializer but focuses on the structure 
-    required for the single object detail response.
+    Calculates aggregate data such as minimum price and minimum delivery time 
+    from nested details and includes formatted timestamps and owner info.
     """
-    class Meta(OfferListSerializer.Meta):
+    details = OfferDetailLinkSerializer(many=True)
+    user = serializers.PrimaryKeyRelatedField(read_only=True)
+    min_price = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    min_delivery_time = serializers.IntegerField(read_only=True)
+
+    created_at = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%SZ")
+    updated_at = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%SZ")
+
+    class Meta:
+        model = Offer
         fields = ['id','user','title','image','description','created_at','updated_at','details','min_price','min_delivery_time']
-    

@@ -9,6 +9,6 @@ router.register(r'offers', OfferView, basename='offer')
 # api/offerdetails/{id}/
 
 urlpatterns = [
-    path('offerdetails/<int:pk>/', OfferDetailView.as_view(), name='offer-details')
+    path('offerdetails/<int:pk>/', OfferDetailView.as_view(), name='offer-package-detail')
     ]
 urlpatterns += router.urls

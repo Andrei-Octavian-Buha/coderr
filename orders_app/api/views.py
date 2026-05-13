@@ -4,7 +4,7 @@ from rest_framework import viewsets, views, status
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from .serializers import OrderSerializer, OrderUpdateSerializer
-from .permissions import IsCustomerOrReadOnly, IsBusinessUserOwner
+from .permissions import IsCustomerOnly, IsOrderParticipant
 from orders_app.models import Order
 from django.contrib.auth import get_user_model
 
@@ -20,14 +20,18 @@ class OrderView(viewsets.ModelViewSet):
     - Customers can view and create orders.
     The list view returns only orders related to the authenticated user.
     """
+   pagination_class = None
+   
    def get_permissions(self):
       if self.action == 'destroy':
          return [IsAdminUser()]
       
       if self.action in ['update','partial_update']:
-         return [IsBusinessUserOwner()]
+         return [IsOrderParticipant()]
+      if self.action == 'create':
+         return [IsCustomerOnly()]
       
-      return [IsCustomerOrReadOnly()]
+      return [IsAuthenticated()]
 
    def get_serializer_class(self):
       if self.action in ['update','partial_update']:
