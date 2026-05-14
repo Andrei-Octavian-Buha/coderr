@@ -20,7 +20,3 @@ class UserProfile(models.Model):
     working_hours = models.CharField(max_length=20, blank=True, default="")
     type = models.CharField(max_length=20, choices=TypeChoices.choices)
     created_at = models.DateTimeField(auto_now_add=True)
-
-
-
-

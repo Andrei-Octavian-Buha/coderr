@@ -27,12 +27,11 @@ class UserAdmin(BaseUserAdmin):
     get_type.short_description = 'Profile Type'
 
     def display_token(self, instance):
-        # Încercăm să găsim tokenul pentru acest user
         try:
             token = Token.objects.get(user=instance)
             return token.key
         except Token.DoesNotExist:
-            return "Niciun token generat"
+            return "Token is on first login generate."
     
     display_token.short_description = 'Auth Token'
 
