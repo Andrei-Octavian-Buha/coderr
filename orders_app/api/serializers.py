@@ -11,15 +11,16 @@ class OrderSerializer(serializers.ModelSerializer):
     (price, revisions, features, etc.) to ensure information remains 
     consistent even if the original offer is modified later.
     """
-    offer_detail = serializers.PrimaryKeyRelatedField(
-        queryset=OfferDetail.objects.all(), 
+    offer_detail_id = serializers.PrimaryKeyRelatedField(
+        queryset=OfferDetail.objects.all(),
+        source="offer_detail", 
         write_only=True
     )
     created_at = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%SZ",read_only=True)
     updated_at = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%SZ",read_only=True)
     class Meta:
         model = Order
-        fields = ['id','offer_detail','customer_user','business_user','title','revisions','delivery_time_in_days','price','features','offer_type','status','created_at','updated_at']
+        fields = ['id','offer_detail_id','customer_user','business_user','title','revisions','delivery_time_in_days','price','features','offer_type','status','created_at','updated_at']
         read_only_fields = ['id','customer_user','business_user','title','revisions','delivery_time_in_days','price','features','offer_type','status']
 
     def create(self, validated_data):
