@@ -92,6 +92,7 @@ class OfferSerializer(serializers.ModelSerializer):
         for detail_data in details_data:
             OfferDetail.objects.create(offer=offer, **detail_data)
         return offer
+    
     def update(self,instance, validated_data):
         details_data = validated_data.pop('details', None)
         for attr, value in validated_data.items():
@@ -101,12 +102,22 @@ class OfferSerializer(serializers.ModelSerializer):
         if details_data is not None:
             for detail_item in details_data:
                 offer_type = detail_item.get('offer_type')
+
+                if not offer_type:
+                    raise serializers.ValidationError(
+                        {"details": "Each object in the details list must have a valid offer_type."}
+                    )
+
                 detail_instance = instance.details.filter(offer_type=offer_type).first()
 
                 if detail_instance:
                     for attr, value in detail_item.items():
                         setattr(detail_instance, attr, value)
                     detail_instance.save()
+                else:
+                    raise serializers.ValidationError(
+                        {"details": f"No record found with the offer_type : '{offer_type}'."}
+                    )
         return instance   
 
 class OfferListSerializer(serializers.ModelSerializer):

@@ -28,7 +28,7 @@ class OrderSerializer(serializers.ModelSerializer):
 
         validated_data['customer_user'] = self.context['request'].user
         validated_data['business_user'] = offer_detail.offer.user
-        validated_data['title'] = offer_detail.offer.title
+        validated_data['title'] = offer_detail.title
         validated_data['revisions'] = offer_detail.revisions
         validated_data['delivery_time_in_days'] = offer_detail.delivery_time_in_days
         validated_data['price'] = offer_detail.price
