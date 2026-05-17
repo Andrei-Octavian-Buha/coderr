@@ -33,6 +33,7 @@ class OrderSerializer(serializers.ModelSerializer):
         validated_data['delivery_time_in_days'] = offer_detail.delivery_time_in_days
         validated_data['price'] = offer_detail.price
         validated_data['features'] = offer_detail.features
+        validated_data['offer_type'] = offer_detail.offer_type
 
         return Order.objects.create(offer_detail=offer_detail,**validated_data)
 
