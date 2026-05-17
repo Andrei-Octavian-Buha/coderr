@@ -27,7 +27,7 @@ class OrderView(viewsets.ModelViewSet):
          return [IsAdminUser()]
       
       if self.action in ['update','partial_update']:
-         return [IsOrderParticipant()]
+         return [IsAuthenticated(), IsOrderParticipant()]
       if self.action == 'create':
          return [IsCustomerOnly()]
       
