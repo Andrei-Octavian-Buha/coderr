@@ -4,6 +4,10 @@ from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 from profile_app.models import UserProfile
 from django.db import transaction
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 class RegisterSerializer(serializers.ModelSerializer):
     """
@@ -28,6 +32,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         if User.objects.filter(email=value).exists():
             raise serializers.ValidationError("Email already  exist")
         return value
+        
     def create(self, validated_data):
         user_type = validated_data.pop('type') 
         validated_data.pop('repeated_password')
@@ -35,7 +40,25 @@ class RegisterSerializer(serializers.ModelSerializer):
             user = User.objects.create_user(**validated_data)
             UserProfile.objects.create(user=user, type=user_type)
         return user
-    
+
+class CustomTokeObtainPairSerializer(TokenObtainPairSerializer):
+    email = serializers.EmailField()
+    password = serializers.CharField(write_only=True)
+
+    def validate(self, attrs):
+        email = attrs.get("email")
+        password = attrs.get("password")
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            raise serializers.ValidationError("Ungultige Email Oder Password")
+        
+        if not user.check_password(password):
+            raise serializers.ValidationError("Ungultige Email Oder Password")
+
+        data =super().validate({"username":user.username, "password":password})
+        return data 
+
 class LoginSerializer(serializers.Serializer):
     """
     Serializer for user authentication.
