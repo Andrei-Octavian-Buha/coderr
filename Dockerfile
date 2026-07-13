@@ -24,4 +24,5 @@ EXPOSE 8000
 
 # Folosim calea completă către gunicorn (poate fi găsită cu 'which gunicorn' în container)
 # Dacă pip l-a instalat, ar trebui să fie în /usr/local/bin/gunicorn
-CMD ["/usr/local/bin/gunicorn", "core.wsgi:application", "--bind", "0.0.0.0:8000"]
+# În loc de calea completă, folosim python -m gunicorn
+CMD ["python", "-m", "gunicorn", "core.wsgi:application", "--bind", "0.0.0.0:8000"]
