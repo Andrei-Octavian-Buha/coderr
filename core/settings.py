@@ -156,7 +156,9 @@ REST_FRAMEWORK = {
 #     "http://127.0.0.1:5500",
 # ]
 
-
+CSRF_TRUSTED_ORIGINS = [
+    'https://coderr.andreibuha.com',
+]
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
