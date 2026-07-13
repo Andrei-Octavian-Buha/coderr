@@ -26,6 +26,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
+    path('api/base-info/', views.base_info_view, name='base-info'),
     path('admin/', admin.site.urls),
     # path('api-token-auth/', views.obtain_auth_token),
     path('api/token/', CookieTokenObtainPairView.as_view(), name='token_obtain_pair'),
