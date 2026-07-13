@@ -1,15 +1,27 @@
-# syntax=docker/dockerfile:1
-FROM python:3
+FROM python:3.12-slim
 
-WORKDIR /usr/src/app
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
-COPY requirements.txt ./
-RUN /usr/local/bin/python -m pip install --upgrade pip
-RUN pip install --no-cache-dir -r requirements.txt
+WORKDIR /app
 
+# Instalăm dependințe de sistem necesare
+RUN apt-get update && apt-get install -y gcc libpq-dev && rm -rf /var/lib/apt/lists/*
 
-COPY . . 
-# (restul liniilor de dinainte)
+# Copiem requirements și instalăm (asigură-te că gunicorn este în requirements.txt!)
+COPY requirements.txt .
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
-# 9. Comanda pentru pornirea aplicației cu Gunicorn
-CMD ["gunicorn", "core.wsgi:application", "--bind", "0.0.0.0:8000"]
+# Copiem codul
+COPY . .
+
+# Colectăm staticele
+RUN python manage.py collectstatic --noinput
+
+# Expunem portul
+EXPOSE 8000
+
+# Folosim calea completă către gunicorn (poate fi găsită cu 'which gunicorn' în container)
+# Dacă pip l-a instalat, ar trebui să fie în /usr/local/bin/gunicorn
+CMD ["/usr/local/bin/gunicorn", "core.wsgi:application", "--bind", "0.0.0.0:8000"]
