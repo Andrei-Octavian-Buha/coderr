@@ -35,7 +35,7 @@ SECRET_KEY = 'django-insecure-%nw-k9=(2)ic^+!0trun+f=!tec5$zdcp+-0xgmz^und_sd2dz
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
+BASE_URL = "http://127.0.0.1:8000/api";
 ALLOWED_HOSTS = [
     'coderr.andreibuha.com',
     'localhost',
@@ -172,6 +172,7 @@ CORS_ALLOWED_ORIGINS = [
 CSRF_TRUSTED_ORIGINS = [
     'https://coderr.andreibuha.com',
 ]
+
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
