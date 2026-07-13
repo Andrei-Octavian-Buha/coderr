@@ -151,10 +151,14 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 6
 }
 
-# CORS_ALLOWED_ORIGINS = [
-#     "http://localhost:5500",
-#     "http://127.0.0.1:5500",
-# ]
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [BASE_DIR / 'frontend'], # <--- Aici îi spui să caute în folderul tău
+        'APP_DIRS': True,
+        # ... restul setărilor
+    },
+]
 
 CSRF_TRUSTED_ORIGINS = [
     'https://coderr.andreibuha.com',
