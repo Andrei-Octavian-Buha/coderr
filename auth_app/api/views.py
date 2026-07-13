@@ -85,7 +85,7 @@ class RegisterView(APIView):
         serializer = RegisterSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
-            # token , _ = Token.objects.get_or_create(user=user)
+            token , _ = Token.objects.get_or_create(user=user)
             return Response(
                 {
                     "token": token.key,
