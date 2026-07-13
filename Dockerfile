@@ -18,6 +18,7 @@ COPY . .
 
 # Colectăm staticele
 RUN python manage.py collectstatic --noinput
+RUN python manage.py migrate
 
 # Expunem portul
 EXPOSE 8000
