@@ -21,7 +21,6 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
-from django.views.generic import TemplateView
 from auth_app.api.views import CookieTokenObtainPairView, CookieTokenRefreshView
 from django.conf import settings
 from django.conf.urls.static import static
@@ -36,7 +35,6 @@ urlpatterns = [
     path('api/', include('offers_app.api.urls')),
     path('api/', include('orders_app.api.urls')),
     path('api/', include('reviews_app.api.urls')),
-    path('', TemplateView.as_view(template_name='index.html')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
