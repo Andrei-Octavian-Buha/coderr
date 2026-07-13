@@ -88,7 +88,7 @@ class RegisterView(APIView):
             # token , _ = Token.objects.get_or_create(user=user)
             return Response(
                 {
-                    # "token": token.key,
+                    "token": token.key,
                     "username": user.username,
                     "email": user.email,
                     "user_id": user.id,
