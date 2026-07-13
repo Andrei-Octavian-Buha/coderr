@@ -23,9 +23,9 @@ MEDIA_URL = '/media/'
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-STATICFILES_DIRS = [
-    BASE_DIR / 'frontend', # Aici Django caută fișierele tale CSS/JS în folderul frontend
-]
+# # STATICFILES_DIRS = [
+#     BASE_DIR / 'frontend', # Aici Django caută fișierele tale CSS/JS în folderul frontend
+# ]
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
