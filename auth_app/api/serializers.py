@@ -44,7 +44,12 @@ class RegisterSerializer(serializers.ModelSerializer):
 class CustomTokeObtainPairSerializer(TokenObtainPairSerializer):
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
+        if "username"in self.fields:
+            self.fields.pop("username")
+    
     def validate(self, attrs):
         email = attrs.get("email")
         password = attrs.get("password")
